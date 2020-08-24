@@ -4,6 +4,12 @@ from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 
 
+class UserRoles(models.TextChoices):
+        USER = 'user'
+        MODERATOR = 'moderator'
+        ADMIN = 'admin'
+
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
         user = self.model(
@@ -21,11 +27,6 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    class UserRoles(models.TextChoices):
-        USER = 'user'
-        MODERATOR = 'moderator'
-        ADMIN = 'admin'
-
     email = models.EmailField(unique=True)
     bio = models.TextField(blank=True, null=True)
   
@@ -41,4 +42,4 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     
     def email_user(self, subject, message, from_email=None, **kwargs):
-        send_mail(subject, messagem from_email, [self.email], **kwargs)
+        send_mail(subject, message, from_email, [self.email], **kwargs)
