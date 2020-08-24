@@ -9,8 +9,8 @@ router.register('', views.UsersViewSet)
 
 
 urlpatterns = [
-    path('auth/email/', views.email_confirmation),
-    path('auth/token/', views.token),
-    path('users/me/', views.current_user),
+    path('auth/email/', views.email_confirmation, name='token_obtain_pair'),
+    path('auth/token/', views.token, name='token'),
+    path('users/me/', views.UserOwnView.as_view(), name='current_user_profile'),
     path('users/', include(router.urls))
 ]
