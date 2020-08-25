@@ -1,22 +1,23 @@
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets, mixins, generics
+from rest_framework import generics, mixins, status, viewsets
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import AccessToken
 
 from api_yamdb.settings import YAMDB_NOREPLY_EMAIL
+
 from .models import User
 from .permissions import IsAdmin, IsModerator, IsOwner, ReadOnly
-from .serializers import (EmailSignUpSerializer, CodeConfirmationSerializer, 
-    UserSerializer)
+from .serializers import (CodeConfirmationSerializer, EmailSignUpSerializer,
+                          UserSerializer)
 
 
 class EmailSignUpView(APIView):
     permission_classes = [AllowAny]
-
+    
     def post(self, request):
         serializer = EmailSignUpSerializer(data=request.data)
         if serializer.is_valid():
@@ -73,4 +74,3 @@ class UserOwnView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
-

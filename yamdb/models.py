@@ -43,3 +43,4 @@ class Title(models.Model):
 
     class Meta:
         verbose_name_plural = "Произведения"
+        ordering = ['-id']
