@@ -62,6 +62,7 @@ class CodeConfirmationView(APIView):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    lookup_field = 'username'
     permission_classes = [IsAdmin]
 
 
