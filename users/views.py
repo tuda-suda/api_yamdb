@@ -30,7 +30,7 @@ class EmailSignUpView(APIView):
                 mail_subject='Код подтверждения',
                 message=f'Ваш код подтверждения {confirmation_code}',
                 from_email=YAMDB_NOREPLY_EMAIL,
-                [email]
+                recipient_list=[email]
             )
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
