@@ -22,7 +22,8 @@ class IsModerator(BasePermission):
         return user.is_authenticated and user.role == UserRoles.MODERATOR
 
     def has_object_permission(self, request, view, obj):
-        return request.user.role == UserRoles.MODERATOR
+        user = request.user
+        return user.is_authenticated and user.role == UserRoles.MODERATOR
 
 
 class IsAdmin(BasePermission):
@@ -31,4 +32,5 @@ class IsAdmin(BasePermission):
         return user.is_authenticated and user.role == UserRoles.ADMIN
 
     def has_object_permission(self, request, view, obj):
-        return request.user.role == UserRoles.ADMIN
+        user = request.user
+        return user.is_authenticated and user.role == UserRoles.ADMIN
