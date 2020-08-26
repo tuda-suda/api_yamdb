@@ -32,10 +32,10 @@ class Title(models.Model):
     description = models.TextField(
         verbose_name='Описание', null=True, blank=True)
     genre = models.ManyToManyField(
-        Genre, verbose_name='Жанр', related_name='titles', null=True,
+        Genre, verbose_name='Жанр', related_name='genre_titles', null=True,
         blank=True)
     category = models.ForeignKey(
-        Category, related_name='titles', on_delete=models.DO_NOTHING,
+        Category, related_name='category_titles', on_delete=models.DO_NOTHING,
         null=True, blank=True)
 
     def __str__(self):

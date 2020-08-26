@@ -1,6 +1,6 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
-from . models import UserRoles
+from .models import UserRoles
 
 
 class ReadOnly(BasePermission):
@@ -25,7 +25,7 @@ class IsModerator(BasePermission):
         return request.user.role == UserRoles.MODERATOR
 
 
-class IsAdmin(BasePermission):      
+class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         user = request.user
         return user.is_authenticated and user.role == UserRoles.ADMIN
