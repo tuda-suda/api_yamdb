@@ -22,10 +22,11 @@ class EmailSignUpView(APIView):
         serializer = EmailSignUpSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.data.get('email')
+            new_user = None
             if not User.objects.filter(email=email).exists():
-                User.objects.create_user(email=email, is_active=False)
+                new_user = User.objects.create_user(email=email, is_active=False)
             
-            user = get_object_or_404(User, email=email)
+            user = new_user or get_object_or_404(User, email=email)
             confirmation_code = default_token_generator.make_token(user)
             send_mail(
                 mail_subject='Код подтверждения',
