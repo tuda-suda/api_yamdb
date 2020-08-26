@@ -54,7 +54,7 @@ class CodeConfirmationView(APIView):
                     status=status.HTTP_200_OK
                 )
             return Response(
-                {'confirmation_code': 'Неверный код подтеврждения'},
+                {'confirmation_code': 'Неверный код подтверждения'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
