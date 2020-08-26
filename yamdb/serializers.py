@@ -10,6 +10,12 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
 
 
+class CategoryField(serializers.SlugRelatedField):
+    def to_representation(self, value):
+        serializer = CategorySerializer(value)
+        return serializer.data
+
+
 class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -17,20 +23,17 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genre
 
 
+class GenreField(serializers.SlugRelatedField):
+    def to_representation(self, value):
+        serializer = GenreSerializer(value)
+        return serializer.data
+
+
 class TitleSerializer(serializers.ModelSerializer):
-    category = serializers.SlugRelatedField(
+    category = CategoryField(
         slug_field='slug', queryset=Category.objects.all())
-    genre = serializers.SlugRelatedField(
+    genre = GenreField(
         slug_field='slug', queryset=Genre.objects.all(), many=True)
-
-    class Meta:
-        fields = '__all__'
-        model = Title
-
-
-class TitleDetailSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(read_only=True)
-    genre = GenreSerializer(read_only=True, many=True)
 
     class Meta:
         fields = '__all__'

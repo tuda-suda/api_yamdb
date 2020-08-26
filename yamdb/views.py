@@ -5,12 +5,11 @@ from rest_framework import filters, generics, mixins, permissions, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny
 
-from users.permissions import IsAdmin
+from users.permissions import IsAdmin, ReadOnly
 
 from .filters import TitleFilter
 from .models import Category, Genre, Title
-from .serializers import (CategorySerializer, GenreSerializer,
-                          TitleDetailSerializer, TitleSerializer)
+from .serializers import (CategorySerializer, GenreSerializer, TitleSerializer)
 
 
 class CategoryViewSet(mixins.CreateModelMixin,
@@ -20,10 +19,7 @@ class CategoryViewSet(mixins.CreateModelMixin,
 
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes_by_action = {
-        'create': (IsAdmin,),
-        'list': (AllowAny,),
-        'destroy': (IsAdmin,)}
+    permission_classes = [IsAdmin | ReadOnly]
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     lookup_field = ('slug')
@@ -35,10 +31,7 @@ class GenreViewSet(mixins.CreateModelMixin,
                    viewsets.GenericViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes_by_action = {
-        'create': (IsAdmin,),
-        'list': (AllowAny,),
-        'destroy': (IsAdmin,)}
+    permission_classes = [IsAdmin | ReadOnly]
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
     lookup_field = ('slug')
@@ -46,16 +39,11 @@ class GenreViewSet(mixins.CreateModelMixin,
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
-    permission_classes_by_action = {
-        'create': (IsAdmin,),
-        'list': (AllowAny,),
-        'destroy': (IsAdmin,),
-        'partial_update': (IsAdmin,)}
-    filter_backends = (d_filters.DjangoFilterBackend,)
+    serializer_class = TitleSerializer
+    permission_classes = [IsAdmin | ReadOnly]
+    # permission_classes_by_action = {
+    #     'create': (IsAdmin,),
+    #     'list': (AllowAny,),
+    #     'destroy': (IsAdmin,),
+    #     'partial_update': (IsAdmin,)}
     filterset_class = TitleFilter
-
-    def get_serializer_class(self):
-        if self.action == 'create' or self.action == 'partial_update':
-            return TitleSerializer
-        else:
-            return TitleDetailSerializer
