@@ -9,7 +9,7 @@ from users.permissions import IsAdmin, ReadOnly
 
 from .filters import TitleFilter
 from .models import Category, Genre, Title
-from .serializers import (CategorySerializer, GenreSerializer, TitleSerializer)
+from .serializers import CategorySerializer, GenreSerializer, TitleSerializer
 
 
 class CategoryViewSet(mixins.CreateModelMixin,
@@ -41,9 +41,4 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
     permission_classes = [IsAdmin | ReadOnly]
-    # permission_classes_by_action = {
-    #     'create': (IsAdmin,),
-    #     'list': (AllowAny,),
-    #     'destroy': (IsAdmin,),
-    #     'partial_update': (IsAdmin,)}
     filterset_class = TitleFilter
