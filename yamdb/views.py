@@ -1,9 +1,5 @@
-from django.shortcuts import render
 from django_filters import rest_framework as d_filters
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, generics, mixins, permissions, viewsets
-from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny
+from rest_framework import filters, mixins, permissions, viewsets
 
 from users.permissions import IsAdmin, ReadOnly
 
