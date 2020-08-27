@@ -65,7 +65,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
-    permission_classes = [IsAdmin, IsAuthenticated]
+    permission_classes = [IsAdmin]
 
 
 class UserOwnView(generics.RetrieveUpdateAPIView):
