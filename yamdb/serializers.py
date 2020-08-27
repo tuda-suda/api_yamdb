@@ -4,9 +4,8 @@ from .models import Category, Genre, Title
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
-        exclude = ('id',)
+        fields = ('name', 'slug')
         model = Category
 
 
@@ -17,9 +16,8 @@ class CategoryField(serializers.SlugRelatedField):
 
 
 class GenreSerializer(serializers.ModelSerializer):
-
     class Meta:
-        exclude = ('id',)
+        fields = ('name', 'slug')
         model = Genre
 
 

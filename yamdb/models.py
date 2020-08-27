@@ -9,7 +9,7 @@ class Category(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Категории"
+        verbose_name_plural = 'Категории'
 
 
 class Genre(models.Model):
@@ -20,7 +20,7 @@ class Genre(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Жанры"
+        verbose_name_plural = 'Жанры'
 
 
 class Title(models.Model):
@@ -42,5 +42,5 @@ class Title(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "Произведения"
-        ordering = ['-id']
+        verbose_name_plural = 'Произведения'
+        ordering = ('-id',)
