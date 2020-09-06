@@ -1,5 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
+User = get_user_model()
 
 class Category(models.Model):
     name = models.CharField(verbose_name='Категория', max_length=50)
@@ -44,3 +46,35 @@ class Title(models.Model):
     class Meta:
         verbose_name_plural = "Произведения"
         ordering = ['-id']
+
+
+class Review(models.Model):
+    text = models.TextField(verbose_name='Текст отзыва', null=True, blank=True)
+    author = models.ForeignKey(User, related_name='reviews', null=False,
+                               on_delete=models.CASCADE)
+    score = models.PositiveSmallIntegerField(verbose_name='Оценка', null=False)
+    pub_date = models.DateTimeField(verbose_name='Дата отзыва',
+                                    auto_now_add=True)
+    title = models.ForeignKey(Title, related_name='reviews', null=False,
+                              verbose_name='Произведение',
+                              on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Отзывы"
+        ordering = ['-score']
+
+
+class Comment(models.Model):
+    text = models.TextField(verbose_name='Текст комментария', null=False,
+                            blank=True)
+    author = models.ForeignKey(User, related_name='comments', null=False,
+                               on_delete=models.CASCADE)
+    pub_date = models.DateTimeField(verbose_name='Дата комментария',
+                                    auto_now_add=True)
+    review = models.ForeignKey(Review, related_name='comments', null=False,
+                               verbose_name='Отзыв',
+                               on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Комментарии"
+        ordering = ['-pub_date']
