@@ -15,5 +15,6 @@ __pycache__/
 *.sublime-workspace
 
 media/
+sent_mails/
 
 db.sqlite3

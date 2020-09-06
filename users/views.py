@@ -29,7 +29,7 @@ class EmailSignUpView(APIView):
             user = new_user or get_object_or_404(User, email=email)
             confirmation_code = default_token_generator.make_token(user)
             send_mail(
-                mail_subject='Код подтверждения',
+                subject='Код подтверждения',
                 message=f'Ваш код подтверждения {confirmation_code}',
                 from_email=YAMDB_NOREPLY_EMAIL,
                 recipient_list=[email]
@@ -51,7 +51,7 @@ class CodeConfirmationView(APIView):
             if default_token_generator.check_token(user, confirmation_code):
                 token = AccessToken.for_user(user)
                 return Response(
-                    {'token': token},
+                    {'token': str(token)},
                     status=status.HTTP_200_OK
                 )
             return Response(
