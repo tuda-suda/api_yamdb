@@ -49,7 +49,6 @@ class TitleViewSet(viewsets.ModelViewSet):
     filterset_class = TitleFilter
 
     def get_queryset(self):
-        print(f'!!!self.kwargs={self.kwargs}')
         object_id = self.kwargs.get('pk')
         if object_id:
             title = Title.objects.get(pk=object_id)
@@ -61,7 +60,6 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    # permission_classes = [IsAdmin | ReadOnly]
 
     def get_permissions(self):
         if self.action in ['update', 'partial_update']:
@@ -99,7 +97,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    # permission_classes = [IsAdmin | ReadOnly]
 
     def get_permissions(self):
         if self.action in ['update', 'partial_update']:

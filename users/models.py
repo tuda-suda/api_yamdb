@@ -14,7 +14,6 @@ class UserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(
             email=email,
-            username=f'user{str(hash(email))[:8]}',
             **extra_fields
         )
         user.set_password(password)
