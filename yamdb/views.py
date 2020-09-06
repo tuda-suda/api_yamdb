@@ -21,13 +21,12 @@ class CategoryViewSet(mixins.CreateModelMixin,
                       mixins.ListModelMixin,
                       mixins.DestroyModelMixin,
                       viewsets.GenericViewSet):
-
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAdmin | ReadOnly]
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
-    lookup_field = ('slug')
+    lookup_field = 'slug'
 
 
 class GenreViewSet(mixins.CreateModelMixin,
@@ -39,7 +38,7 @@ class GenreViewSet(mixins.CreateModelMixin,
     permission_classes = [IsAdmin | ReadOnly]
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
-    lookup_field = ('slug')
+    lookup_field = 'slug'
 
 
 class TitleViewSet(viewsets.ModelViewSet):

@@ -16,7 +16,7 @@ from .serializers import (CodeConfirmationSerializer, EmailSignUpSerializer,
 
 
 class EmailSignUpView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
     
     def post(self, request):
         serializer = EmailSignUpSerializer(data=request.data)
@@ -39,7 +39,7 @@ class EmailSignUpView(APIView):
 
 
 class CodeConfirmationView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         serializer = CodeConfirmationSerializer(data=request.data)
@@ -65,13 +65,13 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
-    permission_classes = [IsAdmin,]
+    permission_classes = (IsAdmin,)
 
 
 class UserOwnView(generics.RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         return self.request.user
