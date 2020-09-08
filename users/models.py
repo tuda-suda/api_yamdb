@@ -29,12 +29,13 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    bio = models.TextField(blank=True, null=True)
+    bio = models.TextField(blank=True, null=True, verbose_name='О себе')
   
     role = models.CharField(
         max_length=50, 
         choices=UserRoles.choices, 
-        default=UserRoles.USER
+        default=UserRoles.USER,
+        verbose_name='Роль пользователя'
     )
 
     objects = UserManager()
