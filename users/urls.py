@@ -14,6 +14,6 @@ auth_urls = [
 
 urlpatterns = [
     path('auth/', include(auth_urls)),
-    # path('users/me/', views.UserOwnView.as_view(), name='current_user_profile'),
+    path('users/me/', views.UserOwnView.as_view(), name='current_user_profile'),
     path('users/', include(router.urls))
 ]

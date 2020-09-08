@@ -1,34 +1,36 @@
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets, mixins, generics
+from rest_framework import generics, mixins, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import AccessToken
 
 from api_yamdb.settings import YAMDB_NOREPLY_EMAIL
+
 from .models import User
 from .permissions import IsAdmin, IsModerator, IsOwner, ReadOnly
-from .serializers import (EmailSignUpSerializer, CodeConfirmationSerializer, 
-    UserSerializer)
+from .serializers import (CodeConfirmationSerializer, EmailSignUpSerializer,
+                          UserSerializer)
 
 
 class EmailSignUpView(APIView):
-    permission_classes = [AllowAny]
-
+    permission_classes = (AllowAny,)
+    
     def post(self, request):
         serializer = EmailSignUpSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.data.get('email')
+            new_user = None
             if not User.objects.filter(email=email).exists():
-                User.objects.create_user(email=email, is_active=False)
+                new_user = User.objects.create_user(email=email, is_active=False)
             
-            user = get_object_or_404(User, email=email)
+            user = new_user or get_object_or_404(User, email=email)
             confirmation_code = default_token_generator.make_token(user)
             send_mail(
-                mail_subject='Код подтверждения',
+                subject='Код подтверждения',
                 message=f'Ваш код подтверждения {confirmation_code}',
                 from_email=YAMDB_NOREPLY_EMAIL,
                 recipient_list=[email]
@@ -38,7 +40,7 @@ class EmailSignUpView(APIView):
 
 
 class CodeConfirmationView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         serializer = CodeConfirmationSerializer(data=request.data)
@@ -60,7 +62,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
-    permission_classes = [IsAdmin]
+    permission_classes = (IsAdmin,)
 
     @action(
         methods=['get', 'patch'], 
@@ -78,6 +80,6 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
             return Response(serializer.data)
-
+          
         serializer = self.get_serializer(user)
         return Response(serializer.data)
