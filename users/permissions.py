@@ -1,7 +1,5 @@
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 
-from .models import UserRoles
-
 
 class ReadOnly(BasePermission):
     def has_permission(self, request, view):
@@ -19,18 +17,18 @@ class IsOwner(BasePermission):
 class IsModerator(BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        return user.is_authenticated and user.role == UserRoles.MODERATOR
+        return user.is_authenticated and user.is_moderator
 
     def has_object_permission(self, request, view, obj):
         user = request.user
-        return user.is_authenticated and user.role == UserRoles.MODERATOR
+        return user.is_authenticated and user.is_moderator
 
 
 class IsAdmin(BasePermission):
     def has_permission(self, request, view):
         user = request.user
-        return user.is_authenticated and user.role == UserRoles.ADMIN
+        return user.is_authenticated and user.is_admin
 
     def has_object_permission(self, request, view, obj):
         user = request.user
-        return user.is_authenticated and user.role == UserRoles.ADMIN
+        return user.is_authenticated and user.is_admin

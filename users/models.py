@@ -32,7 +32,7 @@ class User(AbstractUser):
     bio = models.TextField(blank=True, null=True)
   
     role = models.CharField(
-        max_length=9, 
+        max_length=50, 
         choices=UserRoles.choices, 
         default=UserRoles.USER
     )
@@ -41,3 +41,11 @@ class User(AbstractUser):
 
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'email'
+
+    @property
+    def is_admin(self):
+        return self.role == UserRoles.ADMIN
+
+    @property
+    def is_moderator(self):
+        return self.role == UserRoles.MODERATOR
