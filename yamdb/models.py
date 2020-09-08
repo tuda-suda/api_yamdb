@@ -3,72 +3,73 @@ from django.db import models
 
 User = get_user_model()
 
+
 class Category(models.Model):
     name = models.CharField(verbose_name='Категория', max_length=50)
     slug = models.SlugField(unique=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name_plural = 'Категории'
+
+    def __str__(self):
+        return self.name
 
 
 class Genre(models.Model):
     name = models.CharField(verbose_name='Жанр', max_length=50)
     slug = models.SlugField(unique=True, null=True, blank=True)
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         verbose_name_plural = 'Жанры'
+
+    def __str__(self):
+        return self.name
 
 
 class Title(models.Model):
     name = models.CharField(verbose_name='Название', max_length=250)
     year = models.PositiveIntegerField(
-        verbose_name='Год выпуска', 
-        null=True, 
+        verbose_name='Год выпуска',
+        null=True,
         blank=True
     )
     rating = models.PositiveIntegerField(
-        verbose_name='Рейтинг на основе отзывов', 
-        null=True, 
+        verbose_name='Рейтинг на основе отзывов',
+        null=True,
         blank=True
     )
     description = models.TextField(
-        verbose_name='Описание', 
-        null=True, 
+        verbose_name='Описание',
+        null=True,
         blank=True
     )
     genre = models.ManyToManyField(
-        Genre, 
-        verbose_name='Жанр', 
-        related_name='genre_titles', 
+        Genre,
+        verbose_name='Жанр',
+        related_name='genre_titles',
         null=True,
         blank=True
     )
     category = models.ForeignKey(
-        Category, 
-        related_name='category_titles', 
+        Category,
+        related_name='category_titles',
         on_delete=models.DO_NOTHING,
         null=True, blank=True
     )
-
-    def __str__(self):
-        return self.name
 
     class Meta:
         verbose_name_plural = "Произведения"
         ordering = ['-id']
 
+    def __str__(self):
+        return self.name
+
 
 class Review(models.Model):
     text = models.TextField(verbose_name='Текст отзыва', null=True, blank=True)
     author = models.ForeignKey(
-        User, 
-        related_name='reviews', 
+        User,
+        related_name='reviews',
         null=False,
         on_delete=models.CASCADE
     )
@@ -78,8 +79,8 @@ class Review(models.Model):
         auto_now_add=True
     )
     title = models.ForeignKey(
-        Title, 
-        related_name='reviews', 
+        Title,
+        related_name='reviews',
         null=False,
         verbose_name='Произведение',
         on_delete=models.CASCADE
@@ -92,13 +93,13 @@ class Review(models.Model):
 
 class Comment(models.Model):
     text = models.TextField(
-        verbose_name='Текст комментария', 
+        verbose_name='Текст комментария',
         null=False,
         blank=True
     )
     author = models.ForeignKey(
-        User, 
-        related_name='comments', 
+        User,
+        related_name='comments',
         null=False,
         on_delete=models.CASCADE
     )
@@ -107,8 +108,8 @@ class Comment(models.Model):
         auto_now_add=True
     )
     review = models.ForeignKey(
-        Review, 
-        related_name='comments', 
+        Review,
+        related_name='comments',
         null=False,
         verbose_name='Отзыв',
         on_delete=models.CASCADE
