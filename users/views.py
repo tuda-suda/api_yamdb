@@ -2,6 +2,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets, mixins, generics
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -41,20 +42,16 @@ class CodeConfirmationView(APIView):
 
     def post(self, request):
         serializer = CodeConfirmationSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.data.get('email')
-            confirmation_code = serializer.data.get('confirmation_code')
-            user = get_object_or_404(User, email=email)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.data.get('email')
+        confirmation_code = serializer.data.get('confirmation_code')
+        user = get_object_or_404(User, email=email)
 
-            if default_token_generator.check_token(user, confirmation_code):
-                token = AccessToken.for_user(user)
-                return Response(
-                    {'token': token},
-                    status=status.HTTP_200_OK
-                )
+        if default_token_generator.check_token(user, confirmation_code):
+            token = AccessToken.for_user(user)
             return Response(
-                {'confirmation_code': 'Неверный код подтеврждения'},
-                status=status.HTTP_400_BAD_REQUEST
+                {'token': token},
+                status=status.HTTP_200_OK
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -65,12 +62,22 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     permission_classes = [IsAdmin]
 
+    @action(
+        methods=['get', 'patch'], 
+        detail=False, 
+        permission_classes=[IsAuthenticated]
+    )
+    def me(self, request):
+        user = request.user
+        if request.method == 'PATCH':
+            serializer = self.get_serializer(
+                user, 
+                data=request.data, 
+                partial=True
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data)
 
-class UserOwnView(generics.RetrieveUpdateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
-
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)

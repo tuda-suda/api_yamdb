@@ -7,10 +7,13 @@ from . import views
 router = DefaultRouter()
 router.register('', views.UserViewSet)
 
+auth_urls = [
+    path('email/', views.EmailSignUpView, name='token_obtain_pair'),
+    path('token/', views.CodeConfirmationView, name='token'),
+]
 
 urlpatterns = [
-    path('auth/email/', views.EmailSignUpView, name='token_obtain_pair'),
-    path('auth/token/', views.CodeConfirmationView, name='token'),
-    path('users/me/', views.UserOwnView.as_view(), name='current_user_profile'),
+    path('auth/', include(auth_urls)),
+    # path('users/me/', views.UserOwnView.as_view(), name='current_user_profile'),
     path('users/', include(router.urls))
 ]
