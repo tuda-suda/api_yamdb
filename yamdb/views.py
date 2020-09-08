@@ -78,15 +78,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        score = self.request.data.get('score')
-        if score:
-            try:
-                score = int(score)
-            except TypeError:
-                raise ValidationError(f'Could not convert score {score} to int')
-            if not (1 <= score <= 10):
-                raise ValidationError(
-                    f'Score {score} is outside of scope [1-10]')
         reviews = Review.objects.filter(title__id=title.pk,
                                        author=self.request.user)
         if reviews:
