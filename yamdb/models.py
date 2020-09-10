@@ -31,6 +31,7 @@ class Title(models.Model):
     name = models.CharField(verbose_name='Название', max_length=250)
     year = models.PositiveIntegerField(
         verbose_name='Год выпуска',
+        db_index=True,
         null=True,
         blank=True
     )
@@ -80,7 +81,8 @@ class Review(models.Model):
     )
     pub_date = models.DateTimeField(
         verbose_name='Дата отзыва',
-        auto_now_add=True
+        auto_now_add=True,
+        db_index=True
     )
     title = models.ForeignKey(
         Title,
@@ -109,7 +111,8 @@ class Comment(models.Model):
     )
     pub_date = models.DateTimeField(
         verbose_name='Дата комментария',
-        auto_now_add=True
+        auto_now_add=True,
+        db_index=True
     )
     review = models.ForeignKey(
         Review,

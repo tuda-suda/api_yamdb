@@ -13,7 +13,7 @@ from api_yamdb.settings import YAMDB_NOREPLY_EMAIL
 from .models import User
 from .permissions import IsAdmin, IsModerator, IsOwner, ReadOnly
 from .serializers import (CodeConfirmationSerializer, EmailSignUpSerializer,
-                          UserSerializer)
+    UserSerializer)
 
 
 class EmailSignUpView(APIView):
@@ -21,22 +21,21 @@ class EmailSignUpView(APIView):
     
     def post(self, request):
         serializer = EmailSignUpSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.data.get('email')
-            new_user = None
-            if not User.objects.filter(email=email).exists():
-                new_user = User.objects.create_user(email=email, is_active=False)
-            
-            user = new_user or get_object_or_404(User, email=email)
-            confirmation_code = default_token_generator.make_token(user)
-            send_mail(
-                subject='Код подтверждения',
-                message=f'Ваш код подтверждения {confirmation_code}',
-                from_email=YAMDB_NOREPLY_EMAIL,
-                recipient_list=[email]
-            )
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.data.get('email')
+        new_user = None
+        if not User.objects.filter(email=email).exists():
+            new_user = User.objects.create_user(email=email, is_active=False)
+        
+        user = new_user or get_object_or_404(User, email=email)
+        confirmation_code = default_token_generator.make_token(user)
+        send_mail(
+            subject='Код подтверждения',
+            message=f'Ваш код подтверждения {confirmation_code}',
+            from_email=YAMDB_NOREPLY_EMAIL,
+            recipient_list=[email]
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CodeConfirmationView(APIView):

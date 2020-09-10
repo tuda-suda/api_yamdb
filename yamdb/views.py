@@ -1,8 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
-from django.shortcuts import render
-from django_filters import rest_framework as d_filters
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, mixins, permissions, viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
@@ -12,10 +9,11 @@ from users.permissions import IsAdmin, ReadOnly, IsOwner, IsModerator
 
 from .filters import TitleFilter
 from .models import Category, Genre, Title, Review
-from .serializers import CategorySerializer, GenreSerializer, TitleSerializer, \
-    ReviewSerializer, CommentSerializer
+from .serializers import (CategorySerializer, GenreSerializer, TitleSerializer, 
+    ReviewSerializer, CommentSerializer)
 
 User = get_user_model()
+
 
 class CategoryViewSet(mixins.CreateModelMixin,
                       mixins.ListModelMixin,
