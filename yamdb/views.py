@@ -45,15 +45,6 @@ class TitleViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdmin | ReadOnly]
     filterset_class = TitleFilter
 
-    def get_queryset(self):
-        object_id = self.kwargs.get('pk')
-        if object_id:
-            title = Title.objects.get(pk=object_id)
-            reviews = title.reviews.all()
-            title.rating = reviews.aggregate(Avg("score"))['score__avg']
-            title.save()
-        return super().get_queryset()
-
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer

@@ -35,11 +35,6 @@ class Title(models.Model):
         null=True,
         blank=True
     )
-    rating = models.PositiveIntegerField(
-        verbose_name='Рейтинг на основе отзывов',
-        null=True,
-        blank=True
-    )
     description = models.TextField(
         verbose_name='Описание',
         null=True,
